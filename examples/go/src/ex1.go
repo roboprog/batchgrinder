@@ -7,7 +7,10 @@ import (
 // TODO:  process something
 func main(
 		) {
-	grinder.Run()
+	grinder.Run(
+			grinder.Loader {},
+			grinder.Transformer {},
+			grinder.Dumper {})
 }
 
 
