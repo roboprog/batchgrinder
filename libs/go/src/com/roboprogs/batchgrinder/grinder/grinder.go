@@ -92,11 +92,53 @@ func proc_units(
 		load Loader,
 		transform Transformer,
 		dump Dumper) {
+	loaded_units := make( chan * interface {})
+	transformed_units := make( chan * interface {})
+
+	go load_units( load, loaded_units)
+	go transform_units( transform, loaded_units, transformed_units)
+	go dump_units( dump, transformed_units)
+	// TODO:  wait for EOF, continue
+}
+
+// load "units" (customers, statements, messages, whatever)
+func load_units(
+		load Loader,
+		loaded_units chan * interface {}) {
 	log.Printf( "Read units\n")
+	for {
+		loaded := ( *load.Unit)()
+		// TODO: check for errors / EOF
+		loaded_units <- loaded
+	}
+}
 
+// transform "units" (customers, statements, messages, whatever)
+func transform_units(
+		transform Transformer,
+		loaded_units chan * interface {},
+		transformed_units chan * interface {}) {
 	log.Printf( "Process units\n")
+	for {
+		loaded := ( <- loaded_units)
+		// TODO: EOF
+		transformed := ( *transform.Unit)( loaded, 0)  // TODO:  counter
+		// TODO: check for errors
+		transformed_units <- transformed
+	}
+}
 
+// dump "units" (customers, statements, messages, whatever)
+func dump_units(
+		dump Dumper,
+		transformed_units chan * interface {}) {
 	log.Printf( "Write units\n")
+	for {
+		transformed := ( <- transformed_units)
+		// TODO: EOF
+		( *dump.Unit)( transformed, 0)  // TODO:  counter
+		// TODO: check for errors
+	}
 }
 
 // process trailer, if any
