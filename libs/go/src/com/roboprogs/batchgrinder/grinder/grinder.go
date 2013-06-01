@@ -5,10 +5,15 @@ import (
 )
 
 type (
-	// function pointers to fetch input for a job
+	// Function pointers to fetch input for a job.
+	// Chose not to use an interface, to allow maximum flexibility
+	// for the library user  --  not all methods need to be implemented,
+	// they can belong to whatever structure makes sense for your app
+	// (object for doing all input, or, object for doing all header operations, for instance),
+	// nor do the routines even need to be actual methods.
 	Loader struct {
 		// callback to get the main processing units
-		Unit * func () * interface {}
+		Unit * func ( int) * interface {}
 
 		// callback to get the [file] header
 		Header * func () * interface {}
@@ -106,10 +111,13 @@ func load_units(
 		load Loader,
 		loaded_units chan * interface {}) {
 	log.Printf( "Read units\n")
+	num := 0
 	for {
-		loaded := ( *load.Unit)()
+		num++
+		// TODO: periodic progress message
+		in_unit := ( *load.Unit)( num)
 		// TODO: check for errors / EOF
-		loaded_units <- loaded
+		loaded_units <- in_unit
 	}
 }
 
@@ -119,12 +127,15 @@ func transform_units(
 		loaded_units chan * interface {},
 		transformed_units chan * interface {}) {
 	log.Printf( "Process units\n")
+	num := 0
 	for {
-		loaded := ( <- loaded_units)
+		num++
+		// TODO: periodic progress message
+		in_unit := ( <- loaded_units)
 		// TODO: EOF
-		transformed := ( *transform.Unit)( loaded, 0)  // TODO:  counter
+		out_unit := ( *transform.Unit)( in_unit, num)
 		// TODO: check for errors
-		transformed_units <- transformed
+		transformed_units <- out_unit
 	}
 }
 
@@ -133,10 +144,13 @@ func dump_units(
 		dump Dumper,
 		transformed_units chan * interface {}) {
 	log.Printf( "Write units\n")
+	num := 0
 	for {
-		transformed := ( <- transformed_units)
+		num++
+		// TODO: periodic progress message
+		out_unit := ( <- transformed_units)
 		// TODO: EOF
-		( *dump.Unit)( transformed, 0)  // TODO:  counter
+		( *dump.Unit)( out_unit, num)  // TODO:  counter
 		// TODO: check for errors
 	}
 }
