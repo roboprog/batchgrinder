@@ -25,7 +25,7 @@ type (
 		Trailer func () interface {}
 	}
 
-	// function pointers to validate and transform data for a job
+	// Functions to validate and transform data for a job
 	Transformer struct {
 		// callback to transform / validate the main processing units
 		Unit func ( interface {}, int) interface {}
@@ -37,7 +37,7 @@ type (
 		Trailer func ( interface {}) interface {}
 	}
 
-	// function pointers to create output for a job
+	// Functions to create output for a job
 	Dumper struct {
 		// callback to put the main processing units
 		Unit func ( interface {}, int)
@@ -48,24 +48,29 @@ type (
 		// callback to put the [file] trailer
 		Trailer func ( interface {})
 	}
+
+	// Job callbacks
+	Callbacks struct {
+		Load Loader
+		Transform Transformer
+		Dump Dumper
+	}
 )
 
 
 // Drive processing of a batch job
 func Run(
-		load Loader,
-		transform Transformer,
-		dump Dumper) {
+		callbacks Callbacks) {
 	log.SetFlags( log.Ldate | log.Lmicroseconds | log.Lshortfile)  // TODO:  external config
 	log.Printf( "BEGIN\n")
 
 	// TODO:  set number of CPUs available for program
 
-	proc_hdr( load, transform, dump)
+	proc_hdr( callbacks.Load, callbacks.Transform, callbacks.Dump)
 
-	proc_units( load, transform, dump)
+	proc_units( callbacks.Load, callbacks.Transform, callbacks.Dump)
 
-	proc_tlr( load, transform, dump)
+	proc_tlr( callbacks.Load, callbacks.Transform, callbacks.Dump)
 
 	log.Printf( "DONE\n")
 }
