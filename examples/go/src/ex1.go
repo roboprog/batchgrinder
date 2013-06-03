@@ -7,11 +7,14 @@ import (
 )
 
 // simulate a batch job, using framework to pipeline steps
-func main(
-		) {
+func main () {
+
+	loader := grinder.Loader {}
+	transformer := grinder.Transformer {}
+	dumper := grinder.Dumper {}
 
 	// pretend to read input
-	load := func(
+	loader.Unit = func(
 			num int) interface {} {
 		if num > 6 {
 			return nil
@@ -22,7 +25,7 @@ func main(
 	}
 
 	// pretend to process input and create output
-	transform := func (
+	transformer.Unit = func (
 			in_data interface {},
 			num int) interface {} {
 		in_rec := in_data.( string)
@@ -30,17 +33,14 @@ func main(
 	}
 
 	// pretend to write output
-	dump := func (
+	dumper.Unit = func (
 			out_data interface {},
 			num int) {
 		out_rec := out_data.( string)
 		fmt.Printf( "%d) %s\n", num, out_rec)
 	}
 
-	grinder.Run(
-			grinder.Loader { &load, nil, nil },
-			grinder.Transformer { &transform, nil, nil },
-			grinder.Dumper { &dump, nil, nil })
+	grinder.Run( loader, transformer, dumper)
 }
 
 

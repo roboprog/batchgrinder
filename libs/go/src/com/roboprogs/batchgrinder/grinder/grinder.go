@@ -5,45 +5,48 @@ import (
 )
 
 type (
-	// Function pointers to fetch input for a job.
-	// Chose not to use an interface, to allow maximum flexibility
+	// Chose not to use interfaces, to allow maximum flexibility
 	// for the library user  --  not all methods need to be implemented,
 	// they can belong to whatever structure makes sense for your app
-	// (object for doing all input, or, object for doing all header operations, for instance),
+	// (an object for doing all input, or, an object for doing all header operations, for instance),
 	// nor do the routines even need to be actual methods.
+	//  - or -
+	// "Dude, not everything's an object"
+
+	// Functions to fetch input for a job.
 	Loader struct {
 		// callback to get the main processing units
-		Unit * func ( int) interface {}
+		Unit func ( int) interface {}
 
 		// callback to get the [file] header
-		Header * func () interface {}
+		Header func () interface {}
 
 		// callback to get the [file] trailer
-		Trailer * func () interface {}
+		Trailer func () interface {}
 	}
 
 	// function pointers to validate and transform data for a job
 	Transformer struct {
 		// callback to transform / validate the main processing units
-		Unit * func ( interface {}, int) interface {}
+		Unit func ( interface {}, int) interface {}
 
 		// callback to transform / validate the [file] header
-		Header * func ( interface {}) interface {}
+		Header func ( interface {}) interface {}
 
 		// callback to transform / validate the [file] trailer
-		Trailer * func ( interface {}) interface {}
+		Trailer func ( interface {}) interface {}
 	}
 
 	// function pointers to create output for a job
 	Dumper struct {
 		// callback to put the main processing units
-		Unit * func ( interface {}, int)
+		Unit func ( interface {}, int)
 
 		// callback to put the [file] header
-		Header * func ( interface {})
+		Header func ( interface {})
 
 		// callback to put the [file] trailer
-		Trailer * func ( interface {})
+		Trailer func ( interface {})
 	}
 )
 
@@ -75,7 +78,7 @@ func proc_hdr(
 	in_hdr := func () interface {} {
 		if load.Header != nil {
 			log.Printf( "Read header\n")
-			return ( *load.Header)()
+			return load.Header()
 		}
 		return nil
 	} ()
@@ -83,14 +86,14 @@ func proc_hdr(
 	out_hdr := func () interface {} {
 		if transform.Header != nil {
 			log.Printf( "Process header\n")
-			return ( *transform.Header)( in_hdr)
+			return transform.Header( in_hdr)
 		}
 		return nil
 	} ()
 
 	if dump.Header != nil {
 		log.Printf( "Write header\n")
-		( *dump.Header)( out_hdr)
+		dump.Header( out_hdr)
 	}
 }
 
@@ -116,7 +119,7 @@ func load_units(
 	num := 0
 	for {
 		num++
-		in_unit := ( *load.Unit)( num)
+		in_unit := load.Unit( num)
 		// TODO: check for errors
 		loaded_units <- in_unit
 		if in_unit == nil {
@@ -142,7 +145,7 @@ func transform_units(
 			return
 		}
 
-		out_unit := ( *transform.Unit)( in_unit, num)
+		out_unit := transform.Unit( in_unit, num)
 		// TODO: check for errors
 		log.Printf( "Processed unit %d\n", num)
 		// TODO: periodic progress message
@@ -163,7 +166,7 @@ func dump_units(
 			eof <- "EOF"
 			return
 		}
-		( *dump.Unit)( out_unit, num)
+		dump.Unit( out_unit, num)
 		// TODO: check for errors
 		log.Printf( "Wrote unit %d\n", num)
 		// TODO: periodic progress message
@@ -178,7 +181,7 @@ func proc_tlr(
 	in_tlr := func () interface {} {
 		if load.Trailer != nil {
 			log.Printf( "Read trailer\n")
-			return ( *load.Trailer)()
+			return load.Trailer()
 		}
 		return nil
 	} ()
@@ -186,14 +189,14 @@ func proc_tlr(
 	out_tlr := func () interface {} {
 		if transform.Trailer != nil {
 			log.Printf( "Process trailer\n")
-			return ( *transform.Trailer)( in_tlr)
+			return transform.Trailer( in_tlr)
 		}
 		return nil
 	} ()
 
 	if dump.Trailer != nil {
 		log.Printf( "Write trailer\n")
-		( *dump.Trailer)( out_tlr)
+		dump.Trailer( out_tlr)
 	}
 }
 
