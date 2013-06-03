@@ -107,12 +107,13 @@ func proc_units(
 		load Loader,
 		transform Transformer,
 		dump Dumper) {
-	loaded_units := make( chan interface {})
-	transformed_units := make( chan interface {})
+	loaded_units := make( chan interface {}, 3)  // TODO: configure
+	transformed_units := make( chan interface {}, 3)  // TODO: configure
 	eof := make( chan string)
 
 	go load_units( load, loaded_units)
 	go transform_units( transform, loaded_units, transformed_units)
+	// TODO:  allow multiple transformers (concurrent, not just pipelined)
 	go dump_units( dump, transformed_units, eof)
 	<- eof
 }
