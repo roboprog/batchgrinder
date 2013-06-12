@@ -11,7 +11,8 @@
 ( cd examples/go/bin ; \
 	go build ../src/ex1.go )
 
-
+( cd examples/groovy/src ; \
+	groovyc -d ../bin ex1.groovy )
 
 
 # vi: ts=4 sw=4
