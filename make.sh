@@ -11,8 +11,10 @@
 ( cd examples/go/bin ; \
 	go build ../src/ex1.go )
 
+( cd libs/groovy/src ; \
+	find . -name '*.groovy' | xargs groovyc -d ../../../examples/groovy/bin  )
 ( cd examples/groovy/src ; \
-	groovyc -d ../bin ex1.groovy )
+	find . -name '*.groovy' | xargs groovyc -cp . -d ../bin  )
 
 
 # vi: ts=4 sw=4
