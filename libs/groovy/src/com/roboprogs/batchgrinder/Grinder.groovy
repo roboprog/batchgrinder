@@ -5,7 +5,7 @@ package com.roboprogs.batchgrinder
  */
 class Grinder {
 
-	public void run() {
+	public static void run() {
 		println "TODO: run method in library"
 	}
 
