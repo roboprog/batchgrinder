@@ -23,12 +23,11 @@
 package com.roboprogs.batchgrinder.grinder
 
 /**
- * Job callbacks.
+ * Functions to create output for a job
+ * 	(minimal, unit level only, no header/trailer data)
  */
-interface Callbacks {
-	Loader load
-	Transformer transform
-	Dumper dump
+interface Dumper {
+
 }
 
 

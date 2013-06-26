@@ -2,9 +2,16 @@
 
 import com.roboprogs.batchgrinder.Grinder
 import com.roboprogs.batchgrinder.grinder.Callbacks
+import com.roboprogs.batchgrinder.grinder.Dumper
+import com.roboprogs.batchgrinder.grinder.Loader
+import com.roboprogs.batchgrinder.grinder.Transformer
 
 // TODO:  define and implement callback interfaces
-def callbacks = [:]
+def callbacks = [
+	"load" : [:] as Loader,
+	"transform" : [:] as Transformer,
+	"dump" : [:] as Dumper,
+]
 
 Grinder.run( callbacks as Callbacks)
 

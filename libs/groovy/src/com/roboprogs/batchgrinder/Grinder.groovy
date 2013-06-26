@@ -23,6 +23,9 @@
 package com.roboprogs.batchgrinder
 
 import com.roboprogs.batchgrinder.grinder.Callbacks
+import com.roboprogs.batchgrinder.grinder.Dumper
+import com.roboprogs.batchgrinder.grinder.Loader
+import com.roboprogs.batchgrinder.grinder.Transformer
 
 /**
  * Namespace for library entry point.
