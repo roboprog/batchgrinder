@@ -22,6 +22,8 @@
 
 package com.roboprogs.batchgrinder
 
+import groovy.util.logging.*
+
 import com.roboprogs.batchgrinder.grinder.Callbacks
 import com.roboprogs.batchgrinder.grinder.Dumper
 import com.roboprogs.batchgrinder.grinder.Loader
@@ -30,12 +32,13 @@ import com.roboprogs.batchgrinder.grinder.Transformer
 /**
  * Namespace for library entry point.
  */
+@Log
 class Grinder {
 
 	/** accept the input configuration and start a batch job */
 	public static void run(
 		Callbacks callbacks) {
-		println "TODO: run method in library"
+		log.info "TODO: run method in library"
 	}
 
 }
