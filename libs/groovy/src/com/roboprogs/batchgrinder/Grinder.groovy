@@ -38,7 +38,42 @@ class Grinder {
 	/** accept the input configuration and start a batch job */
 	public static void run(
 		Callbacks callbacks) {
-		log.info "TODO: run method in library"
+		// TODO:  figure out how to configure logger *from here*,
+		//  without modifying prop file in JRE itself!
+
+		// TODO:  set CPU *quota* for program
+		//  (will try to eat them all, otherwise)
+
+		log.info "BEGIN"
+
+		procHdr callbacks.load, callbacks.transform, callbacks.dump
+
+		procUnits callbacks.load, callbacks.transform, callbacks.dump
+
+		procTlr callbacks.load, callbacks.transform, callbacks.dump
+
+		log.info "DONE"
+	}
+
+	/** process header, if any */
+	private static void procHdr(
+			Loader load,
+			Transformer transform,
+			Dumper dump) {
+	}
+
+	/** process "units" (customers, statements, messages, whatever) */
+	private static void procUnits(
+			Loader load,
+			Transformer transform,
+			Dumper dump) {
+	}
+
+	/** process trailer, if any */
+	private static void procTlr(
+			Loader load,
+			Transformer transform,
+			Dumper dump) {
 	}
 
 }
