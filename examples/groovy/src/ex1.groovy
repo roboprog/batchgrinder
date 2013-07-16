@@ -13,6 +13,16 @@ def callbacks = [
 	"dump" : [:] as Dumper,
 ]
 
+// TODO: clean this up and make library work with it
+callbacks[ "load" ][ "unit" ] = {
+	num ->
+	if ( num > 6) {
+		return null
+	}
+
+	return "In rec " + num
+}
+
 Grinder.run( callbacks as Callbacks)
 
 
