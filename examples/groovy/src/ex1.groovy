@@ -6,23 +6,40 @@ import com.roboprogs.batchgrinder.grinder.Dumper
 import com.roboprogs.batchgrinder.grinder.Loader
 import com.roboprogs.batchgrinder.grinder.Transformer
 
-// TODO:  define and implement callback interfaces
-def callbacks = [
-	"load" : [:] as Loader,
-	"transform" : [:] as Transformer,
-	"dump" : [:] as Dumper,
+// implement callback interfaces
+
+// pretend to read input
+def load = [ "unit" : {
+		num ->
+		if ( num > 6) {
+			return null
+		}
+
+		return "In rec " + num
+	}
 ]
 
-// TODO: clean this up and make library work with it
-callbacks[ "load" ][ "unit" ] = {
-	num ->
-	if ( num > 6) {
-		return null
+// pretend to process input and create output
+def transform = [ "unit" : {
+		in_data, num ->
+		return in_data + " X"
 	}
+]
 
-	return "In rec " + num
-}
+// pretend to write output
+def dump = [ "unit" : {
+		out_data, num ->
+		println "${num}) ${out_data}"
+	}
+]
 
+def callbacks = [
+	"load" : load as Loader,
+	"transform" : transform as Transformer,
+	"dump" : dump as Dumper,
+]
+
+// use the engine to drive the functions (closures) we defined above
 Grinder.run( callbacks as Callbacks)
 
 

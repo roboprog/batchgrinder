@@ -60,6 +60,7 @@ class Grinder {
 			Loader load,
 			Transformer transform,
 			Dumper dump) {
+		// TODO
 	}
 
 	/** process "units" (customers, statements, messages, whatever) */
@@ -67,6 +68,22 @@ class Grinder {
 			Loader load,
 			Transformer transform,
 			Dumper dump) {
+		// TODO:  create and use queues with pipelined worker threads
+
+		def num = 0
+		for (;;) {
+			num ++
+			def in_data = load.unit num
+			if ( in_data == null) {
+				break  // === done ===
+			}
+
+			log.info "Read unit ${num}"
+			def out_data = transform.unit in_data, num
+			log.info "Processed unit ${num}"
+			dump.unit out_data, num
+			log.info "Wrote unit ${num}"
+		}
 	}
 
 	/** process trailer, if any */
@@ -74,6 +91,7 @@ class Grinder {
 			Loader load,
 			Transformer transform,
 			Dumper dump) {
+		// TODO
 	}
 
 }
