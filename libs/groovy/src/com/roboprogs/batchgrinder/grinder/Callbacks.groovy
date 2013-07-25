@@ -25,7 +25,7 @@ package com.roboprogs.batchgrinder.grinder
 /**
  * Job callbacks.
  */
-interface Callbacks {
+class Callbacks {
 	Loader load
 	Transformer transform
 	Dumper dump

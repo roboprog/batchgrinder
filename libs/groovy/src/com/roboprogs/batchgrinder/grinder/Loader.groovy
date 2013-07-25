@@ -28,6 +28,11 @@ package com.roboprogs.batchgrinder.grinder
  */
 interface Loader {
 
+	/** return the loaded data (for input unit number num). */
+	Object unit(
+			int num)
+		;
+
 }
 
 

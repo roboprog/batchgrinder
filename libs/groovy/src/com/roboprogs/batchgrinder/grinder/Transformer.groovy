@@ -28,6 +28,12 @@ package com.roboprogs.batchgrinder.grinder
  */
 interface Transformer {
 
+	/** return the processed data (for input unit number num). */
+	Object unit(
+			Object in_data,
+			int num)
+		;
+
 }
 
 

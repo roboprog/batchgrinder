@@ -33,11 +33,11 @@ def dump = [ "unit" : {
 	}
 ]
 
-def callbacks = [
-	"load" : load as Loader,
-	"transform" : transform as Transformer,
-	"dump" : dump as Dumper,
-]
+def callbacks = new Callbacks(
+	load : load as Loader,
+	transform : transform as Transformer,
+	dump : dump as Dumper,
+);
 
 // use the engine to drive the functions (closures) we defined above
 Grinder.run( callbacks as Callbacks)

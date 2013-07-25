@@ -28,6 +28,12 @@ package com.roboprogs.batchgrinder.grinder
  */
 interface Dumper {
 
+	/** output the processed data (for input unit number num). */
+	void unit(
+			Object out_data,
+			int num)
+		;
+
 }
 
 
